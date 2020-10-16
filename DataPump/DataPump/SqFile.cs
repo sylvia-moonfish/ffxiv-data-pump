@@ -73,11 +73,11 @@ namespace DataPump
                     for (int i = 0; i < blockCount; i++)
                     {
                         // read where the block is from the header.
-                        // first 18 bytes are header information so skip that.
+                        // first 0x18 bytes are header information so skip that.
                         // block offsets are listed after every 8 bytes.
                         int blockOffset = BitConverter.ToInt32(header, 0x18 + i * 0x8);
 
-                        // read the header of the block now. The length is always 10 bytes.
+                        // read the header of the block now. The length is always 0x10 (16) bytes.
                         // block offset start from after the file header.
                         byte[] blockHeader = new byte[0x10];
                         br.BaseStream.Position = Offset + endOfHeader + blockOffset;
