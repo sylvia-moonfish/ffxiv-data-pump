@@ -56,7 +56,7 @@ namespace DataPump
 
                     SqFiles[sqFile.DirectoryKey].Add(sqFile.Key, sqFile);
 
-                    Console.WriteLine(string.Format("Reading SqFile: {0} ({1} / {2})", sqFile.Key, i, fileCount));
+                    Program.Report(string.Format("Reading SqFile: {0} ({1} / {2})", sqFile.Key, i + 1, fileCount));
                 }
             }
         }

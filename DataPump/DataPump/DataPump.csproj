@@ -43,6 +43,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="ExDData.cs" />
     <Compile Include="ExDFile.cs" />
     <Compile Include="ExHFile.cs" />
     <Compile Include="Hash.cs" />

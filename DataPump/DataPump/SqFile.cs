@@ -35,14 +35,17 @@ namespace DataPump
             }
         }
 
-        // name of the sqFile.
-        public string Name;
-
-        // name of the directory that this sqFile belongs to.
-        public string Dir;
-
         // physical path to dat file.
         public string DatPath;
+
+        // Deep copy
+        public void Copy(SqFile sqFile)
+        {
+            Key = sqFile.Key;
+            DirectoryKey = sqFile.DirectoryKey;
+            WrappedOffset = sqFile.WrappedOffset;
+            DatPath = sqFile.DatPath;
+        }
 
         // read data blocks and uncompress and concatenate them to raw binary.
         public byte[] ReadData()

@@ -52,11 +52,6 @@ namespace DataPump
     // A file that contains ExH header. This header can contain information about multiple ExD data tables.
     class ExHFile : SqFile
     {
-        // name of the ExH.
-        public string HeaderName;
-
-        // ExH information.
-
         // Variant = 1 for ExD data type headers.
         public ushort Variant;
 
@@ -71,9 +66,6 @@ namespace DataPump
 
         // languages for this ExH. There can be multiple languages for single ExH.
         public ExHLanguage[] Languages;
-
-        // ExD data tables.
-        public List<ExDFile> DataTables = new List<ExDFile>();
 
         // decode ExH from the raw data and populate this instance.
         public void DecodeExH()
@@ -134,5 +126,7 @@ namespace DataPump
                 };
             }
         }
+
+
     }
 }
