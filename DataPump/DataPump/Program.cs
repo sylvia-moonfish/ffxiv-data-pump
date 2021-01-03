@@ -10,32 +10,15 @@ namespace DataPump
         static void Main(string[] args)
         {
             // Create cache for all SqFiles available.
-            SqCache sqCache = new SqCache();
-            sqCache.BaseDir = @"C:\Program Files (x86)\SquareEnix\FINAL FANTASY XIV - A Realm Reborn\game\sqpack\ffxiv";
-            sqCache.InitializeCache();
+            SqCache sqCache = new SqCache(@"C:\Program Files (x86)\SquareEnix\FINAL FANTASY XIV - A Realm Reborn\game\sqpack\ffxiv");
 
             // Print root.exl contents for debugging purposes.
             PrintRoot(sqCache);
 
             // Find exd/Item header file and read/decode it.
-            SqFile itemSqFile = sqCache.SqFiles[Hash.Compute("exd")][Hash.Compute("Item")];
-            ExHFile item = new ExHFile();
-            item.Copy(itemSqFile);
-            item.DecodeExH();
+            ExHFile item = new ExHFile(sqCache.SqFiles[Hash.Compute("exd")][Hash.Compute("Item")]);
 
-            foreach (ExHLanguage language in item.Languages)
-            {
-                using (StreamWriter sw = new StreamWriter(Path.Combine(Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location), language.Code), false))
-                {
-                    foreach (ExHRange range in item.Ranges)
-                    {
-                        SqFile datSqFile = sqCache.SqFiles[Hash.Compute("exd")][Hash.Compute(string.Format("Item_{0}_{1}.exd", range.Start, language.Code))];
-                        ExDFile dat = new ExDFile();
-                        dat.Copy(datSqFile);
-
-                    }
-                }
-            }
+            ExDFile testFile = new ExDFile(sqCache.SqFiles[Hash.Compute("exd")][Hash.Compute(string.Format("Item_{0}_{1}.exd", item.Ranges[0].Start, "en"))], item);
 
             Console.ReadLine();
         }

@@ -45,6 +45,7 @@
   <ItemGroup>
     <Compile Include="ExDData.cs" />
     <Compile Include="ExDFile.cs" />
+    <Compile Include="ExFileBase.cs" />
     <Compile Include="ExHFile.cs" />
     <Compile Include="Hash.cs" />
     <Compile Include="Program.cs" />

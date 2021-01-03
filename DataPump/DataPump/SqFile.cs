@@ -38,13 +38,13 @@ namespace DataPump
         // physical path to dat file.
         public string DatPath;
 
-        // Deep copy
-        public void Copy(SqFile sqFile)
+        // constructor.
+        public SqFile(uint key, uint directoryKey, int wrappedOffset, string datPath)
         {
-            Key = sqFile.Key;
-            DirectoryKey = sqFile.DirectoryKey;
-            WrappedOffset = sqFile.WrappedOffset;
-            DatPath = sqFile.DatPath;
+            Key = key;
+            DirectoryKey = directoryKey;
+            WrappedOffset = wrappedOffset;
+            DatPath = datPath;
         }
 
         // read data blocks and uncompress and concatenate them to raw binary.
@@ -135,32 +135,6 @@ namespace DataPump
                     return ms.ToArray();
                 }
             }
-        }
-
-        // reverse the array if it is in the opposite endian.
-        protected void checkEndian(ref byte[] data, bool isBigEndian)
-        {
-            if (isBigEndian == BitConverter.IsLittleEndian)
-            {
-                Array.Reverse(data);
-            }
-        }
-
-        // conversion functions that take care of endian.
-        protected short toInt16(byte[] buffer, int offset, bool isBigEndian)
-        {
-            byte[] tmp = new byte[2];
-            Array.Copy(buffer, offset, tmp, 0, 2);
-            checkEndian(ref tmp, isBigEndian);
-            return BitConverter.ToInt16(tmp, 0);
-        }
-
-        protected int toInt32(byte[] buffer, int offset, bool isBigEndian)
-        {
-            byte[] tmp = new byte[4];
-            Array.Copy(buffer, offset, tmp, 0, 4);
-            checkEndian(ref tmp, isBigEndian);
-            return BitConverter.ToInt32(tmp, 0);
         }
     }
 }

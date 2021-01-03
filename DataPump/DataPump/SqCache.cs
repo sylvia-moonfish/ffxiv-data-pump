@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.IO;
 
 namespace DataPump
@@ -14,8 +13,10 @@ namespace DataPump
         public Dictionary<uint, Dictionary<uint, SqFile>> SqFiles = new Dictionary<uint, Dictionary<uint, SqFile>>();
 
         // initialize the indexed cache.
-        public void InitializeCache()
+        public SqCache(string baseDir)
         {
+            BaseDir = baseDir;
+
             string indexPath = Path.Combine(BaseDir, "0a0000.win32.index");
             string datPath = Path.Combine(BaseDir, "0a0000.win32.dat0");
 
@@ -37,13 +38,8 @@ namespace DataPump
                 br.BaseStream.Position = fileOffset;
                 for (int i = 0; i < fileCount; i++)
                 {
-                    SqFile sqFile = new SqFile()
-                    {
-                        Key = br.ReadUInt32(),
-                        DirectoryKey = br.ReadUInt32(),
-                        WrappedOffset = br.ReadInt32(),
-                        DatPath = datPath
-                    };
+                    // create SqFile instance and store relative information.
+                    SqFile sqFile = new SqFile(br.ReadUInt32(), br.ReadUInt32(), br.ReadInt32(), datPath);
 
                     // skip 4 bytes.
                     br.ReadInt32();

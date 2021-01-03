@@ -1,6 +1,4 @@
-﻿using System.Collections.Generic;
-
-namespace DataPump
+﻿namespace DataPump
 {
     // represents a column of the ExD data table.
     class ExHColumn
@@ -50,7 +48,7 @@ namespace DataPump
     }
 
     // A file that contains ExH header. This header can contain information about multiple ExD data tables.
-    class ExHFile : SqFile
+    class ExHFile : ExFileBase
     {
         // Variant = 1 for ExD data type headers.
         public ushort Variant;
@@ -67,11 +65,11 @@ namespace DataPump
         // languages for this ExH. There can be multiple languages for single ExH.
         public ExHLanguage[] Languages;
 
-        // decode ExH from the raw data and populate this instance.
-        public void DecodeExH()
+        // decode ExH from the raw data and create new ExH instance.
+        public ExHFile(SqFile sqFile)
         {
             // read the SqFile raw data.
-            byte[] data = ReadData();
+            byte[] data = sqFile.ReadData();
 
             // quit if no data is available.
             if (data == null || data.Length == 0) return;
