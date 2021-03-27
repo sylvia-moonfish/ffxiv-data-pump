@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.IO;
 using System.Reflection;
 using System.Text;
@@ -16,11 +17,13 @@ namespace DataPump
             PrintRoot(sqCache);
 
             // Find exd/Item header file and read/decode it.
-            ExHFile item = new ExHFile(sqCache.SqFiles[Hash.Compute("exd")][Hash.Compute("Item")]);
+            ExHFile item = new ExHFile(sqCache.SqFiles[Hash.Compute("exd")][Hash.Compute("Item.exh")]);
 
-            ExDFile testFile = new ExDFile(sqCache.SqFiles[Hash.Compute("exd")][Hash.Compute(string.Format("Item_{0}_{1}.exd", item.Ranges[0].Start, "en"))], item);
-
-            Console.ReadLine();
+            foreach (ExHRange range in item.Ranges)
+            {
+                ExDFile testFile = new ExDFile(sqCache.SqFiles[Hash.Compute("exd")][Hash.Compute(string.Format("Item_{0}_{1}.exd", range.Start, "en"))], item);
+                PrintExDFile(testFile, string.Format("Item_{0}_{1}.exd", range.Start, "en"));
+            }
         }
 
         private static string prevLine;
@@ -50,6 +53,22 @@ namespace DataPump
                 while (sr.Peek() != -1)
                 {
                     sw.WriteLine(sr.ReadLine());
+                }
+            }
+        }
+
+        private static void PrintExDFile(ExDFile exdFile, string fileName)
+        {
+            using (StreamWriter sw = new StreamWriter(Path.Combine(Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location), string.Format("{0}.csv", fileName)), false))
+            {
+                foreach (ExDRow row in exdFile.Rows)
+                {
+                    foreach (ExDData data in row.Data.Values)
+                    {
+                        sw.Write(string.Format("\"{0}\",", data.Value.ToString()));
+                    }
+
+                    sw.WriteLine();
                 }
             }
         }

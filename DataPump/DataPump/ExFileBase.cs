@@ -7,30 +7,54 @@ namespace DataPump
     // does not contain any file-format-specific stuff.
     class ExFileBase
     {
-        // reverse the array if it is in the opposite endian.
-        protected void checkEndian(ref byte[] data, bool isBigEndian)
+        // copy the data with specified length from buffer, process it with proper endian and return it.
+        protected byte[] extractBytes(byte[] buffer, int offset, bool isBigEndian, int length)
         {
+            byte[] bytes = new byte[length];
+            Array.Copy(buffer, offset, bytes, 0, length);
+
             if (isBigEndian == BitConverter.IsLittleEndian)
             {
-                Array.Reverse(data);
+                Array.Reverse(bytes);
             }
+
+            return bytes;
         }
 
         // conversion functions that take care of endian.
         protected short toInt16(byte[] buffer, int offset, bool isBigEndian)
         {
-            byte[] tmp = new byte[2];
-            Array.Copy(buffer, offset, tmp, 0, 2);
-            checkEndian(ref tmp, isBigEndian);
-            return BitConverter.ToInt16(tmp, 0);
+            return BitConverter.ToInt16(extractBytes(buffer, offset, isBigEndian, 2), 0);
+        }
+
+        protected ushort toUInt16(byte[] buffer, int offset, bool isBigEndian)
+        {
+            return BitConverter.ToUInt16(extractBytes(buffer, offset, isBigEndian, 2), 0);
         }
 
         protected int toInt32(byte[] buffer, int offset, bool isBigEndian)
         {
-            byte[] tmp = new byte[4];
-            Array.Copy(buffer, offset, tmp, 0, 4);
-            checkEndian(ref tmp, isBigEndian);
-            return BitConverter.ToInt32(tmp, 0);
+            return BitConverter.ToInt32(extractBytes(buffer, offset, isBigEndian, 4), 0);
+        }
+
+        protected uint toUInt32(byte[] buffer, int offset, bool isBigEndian)
+        {
+            return BitConverter.ToUInt32(extractBytes(buffer, offset, isBigEndian, 4), 0);
+        }
+
+        protected long toInt64(byte[] buffer, int offset, bool isBigEndian)
+        {
+            return BitConverter.ToInt64(extractBytes(buffer, offset, isBigEndian, 8), 0);
+        }
+
+        protected float toFloat(byte[] buffer, int offset, bool isBigEndian)
+        {
+            return BitConverter.ToSingle(extractBytes(buffer, offset, isBigEndian, 4), 0);
+        }
+
+        protected double toDouble(byte[] buffer, int offset, bool isBigEndian)
+        {
+            return BitConverter.ToDouble(extractBytes(buffer, offset, isBigEndian, 8), 0);
         }
     }
 }

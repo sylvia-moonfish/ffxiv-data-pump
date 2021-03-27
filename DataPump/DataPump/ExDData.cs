@@ -2,18 +2,9 @@
 
 namespace DataPump
 {
-    interface ExDData
+    class ExDData
     {
-        Type GetType();
-
-        object GetData();
+        public Type Type;
+        public object Value;
     }
-
-    /*class ExDByte : ExDData<byte>
-    {
-        public byte GetData()
-        {
-
-        }
-    }*/
 }
