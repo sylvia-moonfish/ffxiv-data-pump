@@ -1,0 +1,146 @@
+﻿using System;
+using System.IO;
+using JsonPump.Models;
+using JsonPump.Models.JSON;
+using Newtonsoft.Json;
+
+namespace JsonPump._5._3
+{
+    public static partial class TableGenerator
+    {
+        public static void GeneratePLD()
+        {
+            Console.WriteLine("[PLD] Generating tables...");
+
+            Table[] tables =
+            {
+                new("1주차 출발 BiS",
+                    "패치 5.2 1주차 영식 공략을 위한 스타팅 BiS 리스트입니다. 꼭 풀금단을 하지 않아도 영식 1~2층까지는 도전해볼만 하지만, 3층 이상부터는 극만신 무기와 일반 레이드 방어구를 꼭 지참하거나 풀금단 제작 장비를 착용하실 것을 권장드립니다."
+                    , new ClassJobCategory {PLD = true},
+                    new GearSet("노금단 제작 세트.", "1주차 풀금단을 하기 부담스러우신 분들을 위한 노금단 제작 세트. 1~2층 트라이에 적합.",
+                        "Sausage and Sauerkraut", 9146.1d, new Gear("Neo-Ishgardian Sword", "dh60", "dh60"),
+                        new Gear("Neo-Ishgardian Shield"),
+                        new Gear("Neo-Ishgardian Cap of Fending", "dh60", "dh60"),
+                        new Gear("Neo-Ishgardian Top of Fending", "ch60", "ch60"),
+                        new Gear("Neo-Ishgardian Gauntlets of Fending", "dh60", "dh60"),
+                        new Gear("Neo-Ishgardian Plate Belt of Fending", "ch60"),
+                        new Gear("Neo-Ishgardian Bottoms of Fending", "ch60", "ch60"),
+                        new Gear("Neo-Ishgardian Sollerets of Fending", "ch60", "ch60"),
+                        new Gear("Neo-Ishgardian Earring of Fending", "ch60"),
+                        new Gear("Neo-Ishgardian Choker of Fending", "ch60"),
+                        new Gear("Neo-Ishgardian Wristbands of Fending", "ch60"),
+                        new Gear("Neo-Ishgardian Ring of Fending", "dh60"),
+                        new Gear("Neo-Ishgardian Ring of Fending", "dh60")),
+                    new GearSet("노금단 + 극만신 + 일반 레이드 세트.",
+                        "1주차 풀금단을 하기 부담스러우신 분들을 위한 노금단 세트에 첫 주에 획득 가능한 극만신 무기와 일반 레이드 상의, 그리고 석판 반지를 조합한 세트. 1~3층 트라이에 적합. 실력에 자신이 있다면 4층도 도전 가능.",
+                        "Sausage and Sauerkraut", 9373.1d, new Gear("Ruby Broadsword", "dh60", "dh60"),
+                        new Gear("Ruby Scutum"), new Gear("Neo-Ishgardian Cap of Fending", "dh60", "dh60"),
+                        new Gear("Edencall Mail of Fending", "dh60", "dh60"),
+                        new Gear("Neo-Ishgardian Gauntlets of Fending", "dh60", "dh60"),
+                        new Gear("Neo-Ishgardian Plate Belt of Fending", "dh60"),
+                        new Gear("Neo-Ishgardian Bottoms of Fending", "ch60", "ch60"),
+                        new Gear("Neo-Ishgardian Sollerets of Fending", "ch60", "ch60"),
+                        new Gear("Neo-Ishgardian Earring of Fending", "ch60"),
+                        new Gear("Neo-Ishgardian Choker of Fending", "ch60"),
+                        new Gear("Neo-Ishgardian Wristbands of Fending", "ch60"),
+                        new Gear("Crystarium Ring of Fending", "ch60", "dh60"),
+                        new Gear("Neo-Ishgardian Ring of Fending", "dh60")),
+                    new GearSet("풀금단 제작 세트.", "1주차 풀금단 제작 세트. 1~4층 트라이에 적합.", "Sausage and Sauerkraut", 9653.4d,
+                        new Gear("Neo-Ishgardian Sword", "dh60", "dh60", "dh60", "dh20", "dh20"),
+                        new Gear("Neo-Ishgardian Shield"),
+                        new Gear("Neo-Ishgardian Cap of Fending", "dh60", "dh60", "dh60", "dh20", "dh20"),
+                        new Gear("Neo-Ishgardian Top of Fending", "ch60", "ch60", "ch60", "ch20", "dh20"),
+                        new Gear("Neo-Ishgardian Gauntlets of Fending", "dh60", "dh60", "dh60", "dh20", "dh20"),
+                        new Gear("Neo-Ishgardian Plate Belt of Fending", "ch60", "dh60", "dh20", "dh20", "dh20"),
+                        new Gear("Neo-Ishgardian Bottoms of Fending", "ch60", "ch60", "dh60", "dh20", "dh20"),
+                        new Gear("Neo-Ishgardian Sollerets of Fending", "ch60", "ch60", "ch60", "ch20", "ch20"),
+                        new Gear("Neo-Ishgardian Earring of Fending", "ch60", "ch60", "ch20", "ch20", "ch20"),
+                        new Gear("Neo-Ishgardian Choker of Fending", "ch60", "dh60", "dh20", "dh20", "dh20"),
+                        new Gear("Neo-Ishgardian Wristbands of Fending", "ch60", "ch60", "ch20", "ch20", "ch20"),
+                        new Gear("Neo-Ishgardian Ring of Fending", "dh60", "dh60", "dh20", "dh20", "dh20"),
+                        new Gear("Neo-Ishgardian Ring of Fending", "dh60", "dh60", "dh20", "dh20", "dh20")),
+                    new GearSet("풀금단 + 극만신 + 일반 레이드 세트.",
+                        "1주차 풀금단 제작 세트에 첫 주에 획득 가능한 극만신 무기와 일반 레이드 상의, 그리고 석판 반지를 조합한 세트. 1~4층 트라이에 적합.",
+                        "Sausage and Sauerkraut", 9771.9d, new Gear("Ruby Broadsword", "dh60", "dh60"),
+                        new Gear("Ruby Scutum"),
+                        new Gear("Neo-Ishgardian Cap of Fending", "dh60", "dh60", "dh60", "dh20", "dh20"),
+                        new Gear("Edencall Mail of Fending", "dh60", "dh60"),
+                        new Gear("Neo-Ishgardian Gauntlets of Fending", "dh60", "dh60", "dh60", "dh20", "dh20"),
+                        new Gear("Neo-Ishgardian Plate Belt of Fending", "ch60", "dh60", "dh20", "dh20", "dh20"),
+                        new Gear("Neo-Ishgardian Bottoms of Fending", "ch60", "ch60", "dh60", "dh20", "dh20"),
+                        new Gear("Neo-Ishgardian Sollerets of Fending", "ch60", "ch60", "ch60", "ch20", "ch20"),
+                        new Gear("Neo-Ishgardian Earring of Fending", "ch60", "ch60", "ch20", "ch20", "ch20"),
+                        new Gear("Neo-Ishgardian Choker of Fending", "ch60", "dh60", "dh20", "dh20", "dh20"),
+                        new Gear("Neo-Ishgardian Wristbands of Fending", "ch60", "ch60", "ch20", "ch20", "ch20"),
+                        new Gear("Neo-Ishgardian Ring of Fending", "dh60", "dh60", "dh20", "dh20", "dh20"),
+                        new Gear("Crystarium Ring of Fending", "ch60", "dh60"))),
+                new("5.2 BiS", "", new ClassJobCategory {PLD = true},
+                    new GearSet("글쿨 2.42초 암기/건브 호환 세트.",
+                        "글로벌 쿨다운을 2.42초로 맞추고 나이트의 스킬 로테이션에 따라 DPS를 최적화한 장비 세트. 암흑기사 2.43초 장비 세트와 건브레이커 2.42초 장비 세트와도 호환되어 전사를 제외한 3탱 공용으로 사용하기 좋음.",
+                        "Sausage and Sauerkraut", 10821.3d, new Gear("Edenchoir Bastard Sword", "sks60", "sks60"),
+                        new Gear("Edenchoir Scutum"),
+                        new Gear("Augmented Crystarium Circlet of Fending", "ch60", "dh60"),
+                        new Gear("Augmented Crystarium Tabard of Fending", "dh60", "dh60"),
+                        new Gear("Edenchoir Gauntlets of Fending", "ch60", "dh60"),
+                        new Gear("Edenchoir Tassets of Fending", "dh60", "dh60"),
+                        new Gear("Edenchoir Cuisses of Fending", "dh60", "dh60"),
+                        new Gear("Augmented Crystarium Thighboots of Fending", "dh60", "dh60"),
+                        new Gear("Augmented Crystarium Earrings of Fending", "dh60", "dh60"),
+                        new Gear("Edenchoir Choker of Fending", "dh60", "dh60"),
+                        new Gear("Augmented Crystarium Wristband of Fending", "dh60", "dh60"),
+                        new Gear("Edenchoir Ring of Fending", "dh60", "dh60"),
+                        new Gear("Augmented Crystarium Ring of Fending", "ch60", "dh60")), new GearSet(
+                        "글쿨 2.39초 빠른 기시 세트.",
+                        "글로벌 쿨다운을 2.39초로 맞춘 장비 세트. 빠른 기시를 선호하거나 핑이 안 좋으신 분, 혹은 특정 전투를 위해 로테이션을 조절 중이신 분들께 추천.",
+                        "Sausage and Sauerkraut", 10818.1d, new Gear("Edenchoir Bastard Sword", "sks60", "sks60"),
+                        new Gear("Edenchoir Scutum"), new Gear("Edenchoir Helm of Fending", "ch60", "ch60"),
+                        new Gear("Augmented Crystarium Tabard of Fending", "dh60", "dh60"),
+                        new Gear("Edenchoir Gauntlets of Fending", "ch60", "dh60"),
+                        new Gear("Edenchoir Tassets of Fending", "dh60", "dh60"),
+                        new Gear("Edenchoir Cuisses of Fending", "dh60", "dh60"),
+                        new Gear("Augmented Crystarium Thighboots of Fending", "dh60", "dh60"),
+                        new Gear("Augmented Crystarium Earrings of Fending", "dh60", "dh60"),
+                        new Gear("Edenchoir Choker of Fending", "dh60", "sks60"),
+                        new Gear("Augmented Crystarium Wristband of Fending", "dh60", "sks60"),
+                        new Gear("Edenchoir Ring of Fending", "dh60", "dh60"),
+                        new Gear("Augmented Crystarium Ring of Fending", "ch60", "dh60"))),
+                new("5.25 BiS", "패치 5.25에 추가되는 신규 극만신에서 얻을 수 있는 Relic 장비를 포함한 BiS 리스트입니다.",
+                    new ClassJobCategory {PLD = true},
+                    new GearSet("글쿨 2.42초 암기/건브 호환 세트.",
+                        "패치 5.2 글쿨 2.42초 장비 세트에서 머리 장비와 무기 마테를 바꾼 장비 세트. 약간의 DPS 향상을 기대할 수 있으나 직격 확률에 크게 의존하므로 운이 좋지 않으면 전보다 더 낮은 DPS가 나올 수도 있음.",
+                        "Sausage and Sauerkraut", 10831.7d, new Gear("Edenchoir Bastard Sword", "dh60", "dh60"),
+                        new Gear("Edenchoir Scutum"),
+                        new Gear("Idealized Chevalier's Temple Chain", "dh60", "dh60", "dh60", "sks60", "sks60"),
+                        new Gear("Augmented Crystarium Tabard of Fending", "dh60", "dh60"),
+                        new Gear("Edenchoir Gauntlets of Fending", "ch60", "dh60"),
+                        new Gear("Edenchoir Tassets of Fending", "dh60", "dh60"),
+                        new Gear("Edenchoir Cuisses of Fending", "dh60", "dh60"),
+                        new Gear("Augmented Crystarium Thighboots of Fending", "dh60", "dh60"),
+                        new Gear("Augmented Crystarium Earrings of Fending", "dh60", "dh60"),
+                        new Gear("Edenchoir Choker of Fending", "dh60", "dh60"),
+                        new Gear("Augmented Crystarium Wristband of Fending", "dh60", "dh60"),
+                        new Gear("Edenchoir Ring of Fending", "dh60", "dh60"),
+                        new Gear("Augmented Crystarium Ring of Fending", "ch60", "dh60"))),
+                new("절 알렉산더 BiS", "", new ClassJobCategory {PLD = true}, new GearSet("글쿨 2.41초 절 알렉산더 세트.",
+                    "절 알렉산더용 장비 세트. 클리어 후에는 무기를 절 알렉산더 무기로 바꿀 것. (방패는 그대로 유지)", "Sausage and Sauerkraut", 8893.4d,
+                    new Gear("Edengrace Bastard Sword", "ch60", "dh60"), new Gear("Edenchoir Scutum"),
+                    new Gear("Augmented Deepshadow Helm of Fending", "dh60", "sks60"),
+                    new Gear("Edengrace Mail of Fending", "ch60", "ch60"),
+                    new Gear("Edengrace Gauntlets of Fending", "dh60", "dh60"),
+                    new Gear("Augmented Deepshadow Tassets of Fending", "dh60", "dh60"),
+                    new Gear("Augmented Deepshadow Breeches of Fending", "ch60", "ch60"),
+                    new Gear("Edengrace Greaves of Fending", "dh60", "dh60"),
+                    new Gear("Edengrace Earring of Fending", "dh60", "dh60"),
+                    new Gear("Augmented Deepshadow Necklace of Fending", "dh60", "dh60"),
+                    new Gear("Edengrace Bracelet of Fending", "dh60", "dh60"),
+                    new Gear("Edengrace Ring of Fending", "ch60", "dh60"),
+                    new Gear("Augmented Deepshadow Ring of Fending", "ch60", "ch60")))
+            };
+
+            using (var sw = new StreamWriter(Path.Join(OutputBasePath, "bis-pld-gear-data.json"), false))
+            {
+                sw.Write(JsonConvert.SerializeObject(tables, Formatting.Indented));
+            }
+        }
+    }
+}

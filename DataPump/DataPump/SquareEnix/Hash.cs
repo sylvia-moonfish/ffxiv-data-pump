@@ -1,8 +1,8 @@
 ﻿using System.Text;
 
-namespace DataPump
+namespace DataPump.SquareEnix
 {
-    static class Hash
+    public static class Hash
     {
         private static uint[] crcTable =
         {
@@ -44,6 +44,7 @@ namespace DataPump
         {
             uint hash = 0xffffffff;
             byte[] bytes = Encoding.ASCII.GetBytes(str);
+
             for (int i = 0; i < bytes.Length; i++)
             {
                 byte b = bytes[i];

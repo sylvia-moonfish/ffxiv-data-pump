@@ -2,21 +2,30 @@
 using System.IO;
 using System.IO.Compression;
 
-namespace DataPump
+namespace DataPump.SquareEnix
 {
-    class SqFile
+    // Represents offset information for the commonly used Square Enix data file.
+    // This "file" is not the same as one physical file! One dat file usually contains multiple Square Enix data files.
+    // SqFile instance only contains offset information. Use "ReadData" to read the actual binary data.
+    public class SqFile
     {
-        // sqFile unique key.
-        public uint Key;
-        
-        // unique key of the directory that this sqFile belongs to.
+        // SqFile directory name.
+        public string DirectoryName;
+
+        // SqFile file name.
+        public string FileName;
+
+        // SqFile directory name hash.
         public uint DirectoryKey;
+
+        // SqFile file name hash.
+        public uint Key;
 
         // Whole offset segment.
         public int WrappedOffset;
 
-        // number of the dat file. (i.e. dat0, dat1,...)
-        // last three bytes then throw away last byte.
+        // Number of the dat file. (i.e. dat0, dat1, ...)
+        // Take last three bytes then throw away last bit.
         public byte DatFile
         {
             get
@@ -25,8 +34,8 @@ namespace DataPump
             }
         }
 
-        // offset of the actual data in the dat file.
-        // throw away DatFile bits then shift by 3.
+        // Offset of the actual data in the physical dat file.
+        // Throw away DatFile bits then shift it by 3.
         public int Offset
         {
             get
@@ -35,29 +44,30 @@ namespace DataPump
             }
         }
 
-        // physical path to dat file.
+        // Physical path of the target dat file.
         public string DatPath;
 
-        // constructor.
-        public SqFile(uint key, uint directoryKey, int wrappedOffset, string datPath)
+        public SqFile(uint key, uint directoryKey, int wrappedOffset, params string[] datPaths)
         {
             Key = key;
             DirectoryKey = directoryKey;
             WrappedOffset = wrappedOffset;
-            DatPath = datPath;
+
+            // Figure out which physical dat file contains this SqFile.
+            DatPath = datPaths[DatFile];
         }
 
-        // read data blocks and uncompress and concatenate them to raw binary.
+        // Read data blocks, uncompress and concatenate them to raw byte array.
         public byte[] ReadData()
         {
             using (FileStream fs = File.OpenRead(DatPath))
             using (BinaryReader br = new BinaryReader(fs))
             {
-                // start of the file is always the int32 length of the file header.
+                // Right at the offset of this file is the int32 that denotes the length of this file's header.
                 br.BaseStream.Position = Offset;
                 int endOfHeader = br.ReadInt32();
 
-                // copy the file header.
+                // Copy the file header.
                 byte[] header = new byte[endOfHeader];
                 br.BaseStream.Position = Offset;
                 br.Read(header, 0, endOfHeader);
@@ -65,73 +75,75 @@ namespace DataPump
                 // 4th byte denotes the type of data, which should be 2 for binary files.
                 if (BitConverter.ToInt32(header, 0x4) != 2) return null;
 
-                // supposed to be the total stream size.
+                // Supposed to be the total stream size.
                 long length = BitConverter.ToInt32(header, 0x10) * 0x80;
 
-                // number of data blocks that have to be read.
+                // Number of data blocks that have to be read.
                 short blockCount = BitConverter.ToInt16(header, 0x14);
 
+                // Memory stream for concatenating incoming uncompressed data.
                 using (MemoryStream ms = new MemoryStream())
                 {
+                    // We'll go block by block.
                     for (int i = 0; i < blockCount; i++)
                     {
-                        // read where the block is from the header.
-                        // first 0x18 bytes are header information so skip that.
-                        // block offsets are listed after every 8 bytes.
+                        // Skip the first 0x18 bytes of the header because they are just header information.
+                        // After 0x18 bytes, the block offset are listed every 8 bytes.
                         int blockOffset = BitConverter.ToInt32(header, 0x18 + i * 0x8);
 
-                        // read the header of the block now. The length is always 0x10 (16) bytes.
-                        // block offset start from after the file header.
+                        // Read the header of the block now. The length is always 0x10 bytes.
+                        // Block offset start from after the file header.
                         byte[] blockHeader = new byte[0x10];
                         br.BaseStream.Position = Offset + endOfHeader + blockOffset;
                         br.Read(blockHeader, 0, 0x10);
 
-                        // first int32 of the block header should always be 0x10.
+                        // First int32 of the block header should always be 0x10.
                         int check = BitConverter.ToInt32(blockHeader, 0);
                         if (check != 0x10) return null;
 
-                        // source size = size the block header thinks the block is taking up.
-                        // raw size = size before compression if it is compressed.
+                        // Source size = size the block header thinks the block is taking up.
+                        // Raw size = size before compression if it is compressed.
                         int sourceSize = BitConverter.ToInt32(blockHeader, 0x8);
                         int rawSize = BitConverter.ToInt32(blockHeader, 0xc);
 
-                        // compression threshold = 0x7d00.
+                        // Compression threshold = 0x7d00.
                         bool isCompressed = sourceSize < 0x7d00;
 
-                        // actual size = if it is compressed, take the source size. if it is not compressed, take the raw size.
+                        // Actual size = if it is compressed, take the source size. If it is not compressed, take the raw size.
                         int actualSize = isCompressed ? sourceSize : rawSize;
 
-                        // block plus block header (0x10) is always padded to be divisible by 0x80.
+                        // Block plus block header (0x10) is always padded to be divisible by 0x80.
                         int paddingLeftover = (actualSize + 0x10) % 0x80;
 
-                        // if it is not compressed, no need to copy the paddings over.
-                        // if it is compressed, we need to take the paddings so that uncompression makes sense.
+                        // If it is not compressed, no need to copy the paddings over.
+                        // If it is compressed, we need to take the paddings too so we can uncompress.
                         if (isCompressed && paddingLeftover != 0)
                         {
                             actualSize += 0x80 - paddingLeftover;
                         }
 
-                        // copy over the block (without the above block header) from file.
+                        // Copy over the block (without the above block header) from the binary.
                         byte[] blockBuffer = new byte[actualSize];
                         br.Read(blockBuffer, 0, actualSize);
 
-                        // uncompress it if needed.
+                        // Uncompress if needed.
                         if (isCompressed)
                         {
                             using (MemoryStream _ms = new MemoryStream(blockBuffer))
                             using (DeflateStream ds = new DeflateStream(_ms, CompressionMode.Decompress))
                             {
+                                // Write the uncompressed data to the memory stream.
                                 ds.CopyTo(ms);
                             }
                         }
                         else
                         {
-                            // if not compressed, just write it to memory stream.
+                            // If not compressed, just write it to memory stream.
                             ms.Write(blockBuffer, 0, blockBuffer.Length);
                         }
                     }
 
-                    // return all data concatenated in memory stream as byte array.
+                    // Return all data concatenated in memory stream as byte array.
                     return ms.ToArray();
                 }
             }
