@@ -29,7 +29,7 @@ namespace JsonPump._5._5
                         new Gear("Edenmorn Wristlet of Casting", "dh60", "dh60"),
                         new Gear("Edenmorn Ring of Casting", "ch60", "ch60"),
                         new Gear("Augmented Cryptlurker's Ring of Casting", "dh60", "det60")),
-                    new GearSet("글쿨 2.5초 석판 반지 세트.", "글로벌 쿨다운을 2.5초로 맞춘 장비 세트.", "Smoked Chicken", 23636.04d,
+                    new GearSet("글쿨 2.5초 석판 반지 세트.", "글로벌 쿨다운을 2.5초로 맞춘 장비 세트. 석판 반지로 인해 아이템 레벨과 체력이 살짝 낮은 것에 유의.", "Smoked Chicken", 23636.04d,
                         new Gear("Edenmorn Index", "det60", "det60"),
                         new Gear("Edenmorn Hat of Casting", "dh60", "dh60"),
                         new Gear("Edenmorn Gown of Casting", "ch60", "ch60"),
