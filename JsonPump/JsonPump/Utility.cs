@@ -220,6 +220,8 @@ namespace JsonPump
                 return new EquipmentSource("에우레카", "에우레카");
             if (equipment.NameEn.Contains("Bonewicca") || equipment.NameEn.Contains("Alliance"))
                 return new EquipmentSource("던전", "던전");
+            if (equipment.NameEn.Contains("Blade's"))
+                return new EquipmentSource("자드노르", "자드노르");
 
             return null;
         }

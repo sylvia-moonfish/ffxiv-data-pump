@@ -98,7 +98,17 @@ namespace JsonPump.Models.JSON
                 attribute.pie
             }.Max();
 
-            foreach (var materia in materias) totalAttribute.Add(materia.attribute, max);
+            foreach (var materia in materias)
+            {
+                if (string.IsNullOrEmpty(materia.nameEn))
+                {
+                    totalAttribute.Add(materia.attribute);
+                }
+                else
+                {
+                    totalAttribute.Add(materia.attribute, max);
+                }
+            }
 
             return totalAttribute;
         }

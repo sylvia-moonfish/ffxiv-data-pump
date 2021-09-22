@@ -15,10 +15,10 @@ namespace JsonPump
         public static string GlobalClientPath =
             @"C:\Program Files (x86)\SquareEnix\FINAL FANTASY XIV - A Realm Reborn\game\sqpack\ffxiv";
 
-        public static string KoreanClientPath = @"D:\Program Files (x86)\FINAL FANTASY XIV - KOREA\game\sqpack\ffxiv";
+        public static string KoreanClientPath = @"C:\Program Files (x86)\FINAL FANTASY XIV - KOREA\game\sqpack\ffxiv";
 
-        public static string ImageBasePath = @"C:\Users\serap\Documents\GitHub\fishbowl-dev\public";
-        public static string OutputBasePath = @"C:\Users\serap\Documents\GitHub\fishbowl-dev\public\data\bis-guide";
+        public static string ImageBasePath = @"C:\Users\chris\Documents\GitHub\fishbowl-dev\public";
+        public static string OutputBasePath = @"C:\Users\chris\Documents\GitHub\fishbowl-dev\public\data\bis-guide";
 
         // Some dictionaries for linking.
         public static Dictionary<int, BaseParam> BaseParams = new();
