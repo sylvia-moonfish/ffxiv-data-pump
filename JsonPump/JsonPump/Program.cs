@@ -179,7 +179,7 @@ namespace JsonPump
 
             if (!Directory.Exists(OutputBasePath)) Directory.CreateDirectory(OutputBasePath);
 
-            TableGenerator.GeneratePLD();
+            //TableGenerator.GeneratePLD();
 
             _5._5.TableGenerator.GeneratePLD();
             _5._5.TableGenerator.GenerateWAR();

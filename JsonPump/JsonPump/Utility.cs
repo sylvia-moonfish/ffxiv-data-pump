@@ -66,15 +66,22 @@ namespace JsonPump
             {
                 if (equipment.ItemLevel == itemLevelTier)
                 {
-                    if (equipment.ClassJobCategory.PLD)
+                    if (equipment.Rarity == 4)
                     {
-                        if (equipment.EquipSlotCategory.IsWeapon)
-                            return new EquipmentSource("영웅 레이드", "4층 낱장 x 5");
-                        if (equipment.EquipSlotCategory.OffHand) return new EquipmentSource("영웅 레이드", "4층 낱장 x 3");
+                        return new EquipmentSource("레지스탕스 웨폰", "레지스탕스 웨폰");
                     }
                     else
                     {
-                        return new EquipmentSource("영웅 레이드", "4층 낱장 x 8");
+                        if (equipment.ClassJobCategory.PLD)
+                        {
+                            if (equipment.EquipSlotCategory.IsWeapon)
+                                return new EquipmentSource("영웅 레이드", "4층 낱장 x 5");
+                            if (equipment.EquipSlotCategory.OffHand) return new EquipmentSource("영웅 레이드", "4층 낱장 x 3");
+                        }
+                        else
+                        {
+                            return new EquipmentSource("영웅 레이드", "4층 낱장 x 8");
+                        }
                     }
                 }
                 else if (equipment.ItemLevel == itemLevelTier - 5)
